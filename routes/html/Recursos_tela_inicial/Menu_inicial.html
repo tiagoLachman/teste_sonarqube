@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <form id="FormRelatorioBug" class="row g-3 needs-validation mb-4" novalidate style="max-width: 30rem;">
+        <div class="col-15 mb-6">
+            <label for="Descricao_input" class="form-label">Enviar sugestões ou relatar bugs</label>
+            <textarea type="text" class="form-control" style="min-height: 8rem; max-height: 18rem;" id="Descricao_input"
+                required></textarea>
+        </div>
+        <div id="TipoRadioGroup">
+            <label class="form-label" for="tipoRadioGroup">Tipo do relatorio</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="radioTipo" id="BotaoRadioBug" value="bug" checked>
+                <label class="form-check-label" for="botaoRadioBug">
+                    Bug
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="radioTipo" id="BotaoRadioMelhoria" value="melhoria">
+                <label class="form-check-label" for="botaoRadioMelhoria">
+                    Melhoria
+                </label>
+            </div>
+        </div>
+        <div class="col-12 mb-2">
+            <button id="EnviarRelatorio" class="btn btn-primary" type="submit">Enviar</button>
+        </div>
+    </form>
+</div>

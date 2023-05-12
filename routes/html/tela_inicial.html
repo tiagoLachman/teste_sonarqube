@@ -1,0 +1,248 @@
+<html lang="pt-br">
+
+<head>
+    <!-- Meta tags Obrigatórias -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Tela Inicial</title>
+    <!-- Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.4.0.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"
+        integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn"
+        crossorigin="anonymous"></script>
+
+    <script>
+        let currentLink = $(location).attr("href");
+        currentLink = currentLink.replace("#", "").replace("?", "");
+
+        function requisitar(arquivo) {
+            //console.log(`LINK:${link}\ntypeof(link):${typeof(arquivo)}`);
+            $.ajax({
+                url: `${currentLink}/recursos`,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ "arquivo": arquivo })
+            }).done(jRes => {
+                //console.log(res);
+                if(redirecionar(jRes)) return;
+                document.getElementById("DivTela").innerHTML = jRes;
+                documentoPronto();
+            });
+        }
+
+        function redirecionar(dados) {
+            if (dados["redirect"] != undefined) {
+                //console.log(`window.location:${window.location.href}`);
+                window.location.replace(window.location.href + dados["redirect"]);
+                return true;
+            }
+            return false;
+        }
+
+        function limparDados() {
+            const div = document.getElementById("DivDados");
+            div.innerHTML = "";
+        }
+
+        function limparForm() {
+            const form = document.getElementById("FormCadastro");
+            for (const elemento of form.elements) {
+                elemento.value = "";
+            }
+            setarDefaults();
+        }
+
+        function setarDefaults() {
+            let today = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
+
+            $("#Data_input").val(`${yyyy}-${mm}-${dd}`);
+        }
+        function documentoPronto() {
+            setarDefaults();
+            (function () {
+                'use strict'
+
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                let forms = document.querySelectorAll('.needs-validation')
+
+                // Loop over them and prevent submission
+                Array.prototype.slice.call(forms)
+                    .forEach(function (form) {
+                        form.addEventListener('submit', function (event) {
+                            if (!form.checkValidity()) {
+                                event.preventDefault()
+                                event.stopPropagation()
+                            }
+                            form.classList.add('was-validated')
+                        }, false)
+                    })
+            })();
+
+            
+            $("#Logout").click(() => {
+
+                $.post(currentLink + "/logout").done(jRes => {
+                    redirecionar(jRes);
+                });
+            });
+            
+
+            $("#CadastrarSC").click((event) => {
+                let jDados = {};
+                const form = document.getElementById("FormCadastro");
+                for (const elemento of form.elements) {
+                    if (!elemento.checkValidity()) {
+                        return;
+                    }
+                    jDados[elemento.id] = elemento.value;
+                }
+                event.preventDefault();
+
+                console.log(jDados);
+                $.ajax({
+                    url: currentLink + "/cadastrar",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(jDados)
+                }).done(jRes => {
+                    if (redirecionar(jRes)) return;
+                    if (jRes["cMensagemErro"] != null) {
+                        alert(jRes["cMensagemErro"]);
+                    } else {
+                        alert("Cadastrado com sucesso");
+                        limparLista();
+                    }
+                    console.log(jRes);
+                });
+            });
+            $("#ProcurarSC").click((event) => {
+                event.preventDefault();
+                let jDados = {};
+                const form = document.getElementById("FormCadastro");
+                for (const elemento of form.elements) {
+                    jDados[elemento.id] = elemento.value;
+                }
+
+                console.log(jDados);
+                $.ajax({
+                    url: currentLink + "/procurar",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(jDados)
+                }).done(jRes => {
+                    if (redirecionar(jRes)) return;
+                    if (jRes["cMensagemErro"] != null) {
+                        alert(jRes["cMensagemErro"]);
+                    }
+                    let divDados = document.getElementById("DivDados");
+                    divDados.innerHTML = "";
+                    console.log(jRes);
+                    //console.log(jRes.dados]);
+                    for (const jDados of jRes.dados) {
+                        let card = document.createElement("div");
+                        card.className = "col card cardSCs";
+                        card.innerHTML = `
+                        <div id="Numero_SC" class="card-header"><h5>${jDados["numero_SC"]}</h5></div>
+                        <div class="card-body">
+                        <p id="Setor_SC" class="card-title">${jDados["setor"]}</p>
+                        <p id="Data_SC" class="card-text">${jDados["data"]}</p>
+                        <p id="Descricao_SC" class="card-text">${jDados["descricao"]}</p>
+                        </div>
+                        `;
+                        divDados.appendChild(card);
+                    }
+                });
+            });
+            $("#EnviarRelatorio").click((event) => {
+                event.preventDefault();
+                let jDados = {
+                    descricao: $("#Descricao_input").val(),
+                    tipo: $('input[type="radio"][name="radioTipo"]:checked').val()
+                }
+                if (jDados.descricao.length <= 20) {
+                    alert("Descrição do relatorio tem que ter pelo mínimo 20 caracteres");
+                    return;
+                }
+                if (jDados.tipo === "") {
+                    alert("Tipo do relatorio errado");
+                    return;
+                }
+                $.ajax({
+                    url: currentLink + "/enviarRelatorio",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(jDados)
+                }).done(jRes => {
+                    if (redirecionar(jRes)) return;
+                    if (jRes["cMensagemErro"]) {
+                        alert(jRes["cMensagemErro"]);
+                    } else{
+                        alert("Relatório enviado com sucesso");
+                    }
+                });
+            });
+        }
+        $(document).ready(() => {
+            // Example starter JavaScript for disabling form submissions if there are invalid fields
+            documentoPronto();
+            requisitar("Menu_inicial");
+        });
+    </script>
+
+    <style>
+        .cardSCs {
+            min-width: 15rem;
+            min-height: 19rem;
+            max-width: 18rem;
+            max-height: 22rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-brand bg-light" style="border: 0; padding: 5px 0px;" href="#" onclick="requisitar('Menu_inicial')">Menu
+                inicial</button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Recursos
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><button class="dropdown-item" onclick="requisitar('SCs')" id="DropDownSCs">Solicitações
+                                    de compras</button></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="nav navbar-expand-lg navbar-light bg-lightnavbar-right">
+                    <button id="Logout" class="navbar-brand bg-light" style="border: 0;">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div id="DivTela">
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,144 @@
+<html lang="pt-br">
+
+<head>
+    <!-- Meta tags Obrigatórias -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Login</title>
+
+    <!-- Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.4.0.js"></script>
+    <link href="https://getbootstrap.com.br/docs/4.1/dist/css/bootstrap.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"
+        integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
+        crossorigin="anonymous"></script>
+
+    <script>
+        var cMensagemErro;
+        var bEmailErrado;
+        var bSenhaErrado;
+
+        $(document).ready(function () {
+
+
+            $("#MensagemErro").hide();
+
+
+            $("#BotaoSubmit").click(function () {
+                if ($("#Email").val() == "" || $("#Senha").val() == "") {
+                    $("#Email").addClass("is-invalid");
+                    $("#Senha").addClass("is-invalid");
+                    $('#MensagemErro').show();
+                    $("#MensagemErroTexto").html("Dados não preenchidos");
+                    return;
+                } else {
+                    $("#Email").removeClass("is-invalid");
+                    $("#Senha").removeClass("is-invalid");
+                    $('#MensagemErro').hide();
+                    $("#MensagemErroTexto").html("");
+                }
+                $.ajax({
+                    url: "/updateLogin",
+                    type: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        "Email": $("#Email").val(),
+                        "Senha": $("#Senha").val()
+                    })
+                }).done(jDados => {
+                    cMensagemErro = jDados["cMensagemErro"];
+                    bEmailErrado = jDados["bEmailErrado"];
+                    bSenhaErrado = jDados["bSenhaErrado"];
+
+                    if (bEmailErrado == true) $("#Email").addClass("is-invalid");
+                    else $("#Email").removeClass("is-invalid");
+
+                    if (bSenhaErrado == true) $("#Senha").addClass("is-invalid");
+                    else $("#Senha").removeClass("is-invalid");
+
+                    if (cMensagemErro) {
+                        $('#MensagemErro').show();
+                        $("#MensagemErroTexto").html(cMensagemErro);
+                    } else {
+                        $('#MensagemErro').hide();
+                        $("#MensagemErroTexto").html("");
+                    }
+
+                    if (jDados["redirect"]) {
+                        window.location.replace(window.location.href + jDados["redirect"]);
+                    }
+                })
+            });
+        });
+    </script>
+    <style>
+        .card {
+            border: 0;
+            width: 100%;
+        }
+
+        .card-body {
+            color: #e02424;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="modal-dialog modal-login">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/auth" method="post">
+                    <div class="form-group">
+                        <i class="fa fa-user"></i>
+                        <input type="text" class="form-control" id="Email" name="Email" placeholder="Email"
+                            required="required">
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-lock"></i>
+                        <input type="password" class="form-control" id="Senha" name="Senha" placeholder="Senha"
+                            required="required">
+                    </div>
+                    <div class="form-group">
+                        <input id="BotaoSubmit" type="button" class="btn btn-primary btn-block btn-lg" value="Entrar"
+                            readonly>
+                    </div>
+                </form>
+            </div>
+            <div>
+                <pre>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EsqueciSenhaModal">
+                        Esqueci minha senha
+                      </button>
+                </pre>
+            </div>
+            <div id="MensagemErro" class="modal-footer" style="justify-content: flex-start;">
+                <div class="card">
+                    <div id="MensagemErroTexto" class="card-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="EsqueciSenhaModal" tabindex="-1" aria-labelledby="EsqueciSenhaModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="EsqueciSenhaModalLabel">Esqueci a minha senha</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Contate o administrador do sistema, fornecendo o seu email.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

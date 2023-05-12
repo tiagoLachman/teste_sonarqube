@@ -1,28 +1,58 @@
 var logger;
-require("./logger/logger_aws_secret.js").then(function (val) {
+require("./logger/logger.js").then(function (val) {
 	logger = val;
 	return val;
 });
-const req_secret = require("./aws/aws_get_secret.js");
 
 const express = require('express');
+const session = require('express-session');
 const app = express();
+const login_router = require("./routes/login_router.js");
+const inicial_router = require("./routes/inicial_router.js");
 
-const port = 80
+const port = 80;
 
-//Response to the test
+app.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
+}));
+app.get('/tela_inicial/*', (req, res, next) => {
+	logger.error("Tentativa de login");
+	console.log(`req.session:${JSON.stringify(req.session)}`);
+	if (!req.session.loggedin) {
+		console.log("não logado");
+		res.redirect("/")
+		return;
+	} else {
+		next()
+	}
+});
+
+//Resposta basica
 app.get('/alive', (req, res) => {
 	res.send("alive");
-	logger.info("INFO TESTE ALIVE");
-	logger.error("ERROR TESTE ALIVE");
+	logger.info("INFO ALIVE");
+	logger.error("ERROR ALIVE");
 });
 
-app.use('/', async (req, res) => {
-	//const secret = await req_secret("NOME-SECRET");
-	//res.send(`Secret:${secret}`);
-
-	res.send("Hello world");
+app.post('/alive', (req, res) => {
+	res.send("alive");
 });
+
+app.post('/tela_inicial/*', (req, res, next) => {
+	console.log(`req.session:${JSON.stringify(req.session)}`);
+	if (!req.session.loggedin) { 
+		res.send({ "redirect": "/" });
+		return;
+	} else {
+		next();
+	}
+});
+
+app.use('/', login_router);
+app.use('/tela_inicial', inicial_router);
 
 app.listen(port);
-console.log(`Running in this port: ${port}`);
+
+console.log(`Running at port: ${port}`);

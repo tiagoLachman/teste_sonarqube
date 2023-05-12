@@ -1,17 +1,22 @@
 {
-  "name": "auto_deploy",
+  "name": "tela_testes",
   "version": "1.0.0",
-  "description": "auto deploy",
+  "description": "Testes",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"No test specified\""
+    "test": "node testes.js",
+    "start": "node index.js"
   },
-  "author": "Tiago",
+  "author": "Tiago André Lachman",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.1376.0",
-    "express": "^4.18.2",
+    "aws-sdk": "^2.1373.0",
+    "body-parser": "^1.19.2",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-session": "^1.17.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
     "winston": "^3.8.2"
   }
 }

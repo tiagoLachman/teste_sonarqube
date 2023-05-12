@@ -1,0 +1,41 @@
+<div class="container-fluid" style="margin-top: 1rem;">
+    <form id="FormCadastro" class="row g-3 needs-validation mb-4" novalidate style="max-width: 30rem;">
+        <div class="col-md-4">
+            <label for="Numero_input" class="form-label">Número da SC</label>
+            <input type="text" class="form-control" id="Numero_input" required>
+            <!--
+            <div class="invalid-feedback">
+                Campo obrigatório
+            </div>
+            -->
+        </div>
+        <div class="col-md-4">
+            <label for="Setor_input" class="form-label">Setor/Projeto</label>
+            <input type="text" class="form-control" id="Setor_input" required>
+        </div>
+        <div class="col-md-6">
+            <label for="Autor_input" class="form-label">Autor</label>
+            <input type="text" class="form-control" id="Autor_input" aria-describedby="inputGroupPrepend" required>
+        </div>
+        <div class="col-md-5">
+            <label for="Data_input" class="form-label">Data criado</label>
+            <input type="date" class="form-control" id="Data_input" required>
+        </div>
+        <div class="col-mb-3">
+            <label for="Descricao_input" class="form-label">Descrição</label>
+            <textarea type="text" class="form-control" id="Descricao_input" required></textarea>
+        </div>
+        <div class="col-12 mb-2">
+            <button id="CadastrarSC" class="btn btn-primary" type="submit">Cadastrar</button>
+            <button id="ProcurarSC" class="btn btn-primary" type="submit">Procurar</button>
+            <button id="LimparDados" class="btn btn-secondary" type="button" onclick="limparDados()">Limpar
+                lista</button>
+            <button id="LimparForm" class="btn btn-secondary" type="button" onclick="limparForm()">Limpar
+                formulario</button>
+        </div>
+
+    </form>
+
+    <div id="DivDados" class="row" style="max-height: 100%;">
+    </div>
+</div>
