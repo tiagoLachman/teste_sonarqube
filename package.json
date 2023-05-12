@@ -1,0 +1,17 @@
+{
+  "name": "auto_deploy",
+  "version": "1.0.0",
+  "description": "auto deploy",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"No test specified\""
+  },
+  "author": "Tiago",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1376.0",
+    "express": "^4.18.2",
+    "winston": "^3.8.2"
+  }
+}
