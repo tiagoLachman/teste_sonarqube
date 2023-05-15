@@ -42,7 +42,7 @@ app.post('/alive', (req, res) => {
 
 app.post('/tela_inicial/*', (req, res, next) => {
 	console.log(`req.session:${JSON.stringify(req.session)}`);
-	if (!req.session.loggedin) { 
+	if (!req.session.loggedin) {
 		res.send({ "redirect": "/" });
 		return;
 	} else {
@@ -50,14 +50,19 @@ app.post('/tela_inicial/*', (req, res, next) => {
 	}
 });
 
-app.use('/', login_router);
+//app.use('/', login_router);
 app.use('/tela_inicial', inicial_router);
+
+app.get("/", (req, res) => {
+	const name = req.query.name;
+	res.send(`<h1>Hello, ${name}</h1>`);
+});
 
 app.listen(port);
 
-let a=1;
-a=1;
-a=1;
+let a = 1;
+a = 1;
+a = 1;
 console.log(a);
 
 console.log(`Running at port: ${port}`);
