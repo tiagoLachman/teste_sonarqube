@@ -60,9 +60,4 @@ app.get("/", (req, res) => {
 
 app.listen(port);
 
-let a = 1;
-a = 1;
-a = 1;
-console.log(a);
-
 console.log(`Running at port: ${port}`);
