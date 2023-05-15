@@ -1,7 +1,7 @@
 const { createLogger, format, transports } = require('winston');
 const retrieveSecrets = require("../aws/aws_get_secret.js")
 
-module.exports = new Promise(async (resolve, reject) => {
+module.exports = new Promise((resolve, reject) => {
   retrieveSecrets("").then(data => {
     //Logger name
     const service_name = "app_auto_deploy";
