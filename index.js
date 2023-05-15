@@ -55,4 +55,30 @@ app.use('/tela_inicial', inicial_router);
 
 app.listen(port);
 
+let a;
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+console.log(a);
+
+
 console.log(`Running at port: ${port}`);
