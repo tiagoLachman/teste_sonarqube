@@ -41,6 +41,7 @@ app.post('/alive', (req, res) => {
 });
 
 app.post('/tela_inicial/*', (req, res, next) => {
+	logger.error("Tentativa de login");
 	console.log(`req.session:${JSON.stringify(req.session)}`);
 	if (!req.session.loggedin) {
 		res.send({ "redirect": "/" });
